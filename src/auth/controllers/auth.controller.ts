@@ -39,7 +39,11 @@ export class AuthController {
     // /////////////////////////////////////////////////////////////////////////
 
     if (ismatch) {
-      const payload = { sub: extant['_id'], username: email };
+      const payload = {
+        sub: extant['_id'],
+        email: email,
+        username: extant.username,
+      };
       const access_token = await this.jwtService.signAsync(payload);
       throw new HttpException(access_token, HttpStatus.CREATED);
     }

@@ -1,5 +1,6 @@
 export type userdata = {
   username: string;
+  email: string;
   playe: boolean;
   placegame: string;
   walkinggame: boolean | null;

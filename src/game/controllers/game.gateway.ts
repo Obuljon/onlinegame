@@ -65,16 +65,16 @@ export class GameSocket
   @SubscribeMessage('playe-game')
   playeGame(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
     const rooms = Array.from(socket.rooms);
-
     // The first room (rooms[0]) is always the socket ID itself, so we start from index 1
     rooms.forEach((room, index) => {
       if (index > 0) {
         socket.leave(room); // Leave all rooms except the socket ID (index 0)
       }
     });
-
+    const { username, email } = data;
     const userdata: userdata = {
-      username: data,
+      username,
+      email,
       playe: true,
       placegame: '*',
       walkinggame: null,
@@ -136,14 +136,22 @@ export class GameSocket
         gameposition: '0',
         message: 'players to the game',
         gamestart: false,
+        myenemy: {
+          email: this.users.get(playerXroom).data.email,
+          username: this.users.get(playerXroom).data.username,
+        },
         gameplaye: createGame.background,
       });
 
-      return this.server.to(playerXroom).emit('players-game', {
+      this.server.to(playerXroom).emit('players-game', {
         walkinggame: 'x',
         gameposition: 'x',
         message: 'players to the game',
         gamestart: true,
+        myenemy: {
+          email: this.users.get(playerOroom).data.email,
+          username: this.users.get(playerOroom).data.username,
+        },
         gameplaye: createGame.background,
       });
     }
